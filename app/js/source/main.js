@@ -1,0 +1,111 @@
+(function(){
+  'use strict';
+
+  $(document).ready(init);
+
+  var currentUser = 0;
+  var currentRoll = 3;
+
+  function init(){
+    $('#add').click(add);
+    $('.arrow').click(arrow);
+    $('body').keydown(move);
+    $('#add-score').click(addScore);
+  }
+
+  function addScore(event){
+    var score = $('#score').val();
+    $('.horizontal .vertical').text(score);
+    event.preventDefault();
+  }
+
+  function move(event){
+    switch(event.keyCode){
+    case 38:
+      currentUser--;
+      paintScreenHor();
+      break;
+    case 40:
+      currentUser++;
+      paintScreenHor();
+      break;
+    case 37:
+      currentRoll--;
+      paintScreenVer();
+      break;
+    case 39:
+      currentRoll++;
+      paintScreenVer();
+      break;
+    }
+  }
+
+  function arrow(){
+    switch(this.id){
+    case 'up':
+      currentUser--;
+      paintScreenHor();
+      break;
+    case 'down':
+      currentUser++;
+      paintScreenHor();
+      break;
+    case 'left':
+      currentRoll--;
+      paintScreenVer();
+      break;
+    case 'right':
+      currentRoll++;
+      paintScreenVer();
+      break;
+    }
+  }
+
+  function paintScreenHor(){
+    $('.horizontal').removeClass();
+    var $trs = $('#game > tbody > tr');
+    var tr = $trs[currentUser];
+    $(tr).addClass('horizontal');
+  }
+
+  function paintScreenVer(){
+    $('.vertical').removeClass();
+    $('#game > tbody > tr > td:nth-child('+ currentRoll +')').addClass('vertical');
+  }
+
+  function add(event){
+    var username = $('#username').val();
+    var avatar = $('#avatar').val();
+    createRow(username, avatar);
+    event.preventDefault();
+  }
+
+  function createRow(username, avatar){
+    var $tr = $('<tr>');
+    var tds = [];
+
+    for(var i = 0; i < 16; i++){
+      tds.push('<td></td>');
+    }
+
+    $tr.append(tds);
+    $('#game > tbody').append($tr);
+
+
+    var count = $('#game > tbody > tr').length;
+    if(count === 1){
+      $tr.addClass('horizontal');
+    }
+
+    var $img = $('<img>');
+    $img.addClass('avatar');
+    $img.attr('src', avatar);
+
+    $tr.children('td:nth-child(1)').addClass('#avatarpic');
+    $tr.children('td:nth-child(1)').append($img);
+    $tr.children('td:nth-child(2)').text(username);
+    $tr.children('td:nth-child(3)').addClass('vertical');
+
+  }
+
+})();
